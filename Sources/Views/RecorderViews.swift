@@ -131,12 +131,14 @@ struct RecorderMenu: View {
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 6)
             } else {
+                // A popover gives a scroll view no height of its own: room for
+                // up to five rows, then it scrolls.
                 ScrollView {
                     VStack(spacing: 2) {
                         ForEach(library.recordings) { recording in row(recording) }
                     }
                 }
-                .frame(maxHeight: 230)
+                .frame(height: min(CGFloat(library.recordings.count), 5) * Self.rowHeight)
             }
         }
     }
@@ -178,6 +180,8 @@ struct RecorderMenu: View {
             Button("Show in Finder") { library.showInFinder(recording) }
         }
     }
+
+    private static let rowHeight: CGFloat = 46
 
     /// "8 steps · 0:24".
     static func details(_ recording: Recording) -> String {

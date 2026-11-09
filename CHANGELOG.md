@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 (2026-11-09)
+
+- Record & Play: the list of recordings no longer gets cut off in some
+  windows.
+
 ## 1.0.0 (2026-11-09)
 
 First public release.
