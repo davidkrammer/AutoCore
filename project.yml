@@ -37,13 +37,6 @@ targets:
           - "**/Localizable.strings"
       - path: Resources/WebDriverAgent-LICENSE.txt
         buildPhase: resources
-      # Built by scripts/build-wda.sh (not committed).
-      - path: Resources/WebDriverAgentProducts.zip
-        buildPhase: resources
-        optional: true
-      - path: Resources/WebDriverAgentSource.zip
-        buildPhase: resources
-        optional: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(AUTOCORE_BUNDLE_PREFIX).autocore
@@ -59,6 +52,15 @@ targets:
     postBuildScripts:
       - name: Merge strings
         script: '"$SRCROOT/scripts/merge-strings.sh" "$SRCROOT/Resources" "$SRCROOT/Demo"'
+        basedOnDependencyAnalysis: false
+      # The WebDriverAgent archives from scripts/build-wda.sh, if built yet.
+      - name: Bundle WebDriverAgent
+        script: |
+          for name in WebDriverAgentProducts.zip WebDriverAgentSource.zip; do
+            if [ -f "$SRCROOT/Resources/$name" ]; then
+              cp "$SRCROOT/Resources/$name" "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/"
+            fi
+          done
         basedOnDependencyAnalysis: false
 
   # Text recognition helper. macOS can delete Vision's compiled model while
