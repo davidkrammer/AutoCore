@@ -145,6 +145,7 @@ final class RemotePanelBuilder {
             }])))
         }
         blocks += model.tools.remoteSetup(builder: self)
+        blocks += recorderBlocks()
         var more: [RemoteAction] = []
         if let open = openWindowAction() { more.append(open) }
         let repair = TextRecognitionRepair.shared
@@ -163,6 +164,54 @@ final class RemotePanelBuilder {
         blocks.append(RemoteBlock("more", .actions(more)))
         return RemotePanel(title: model.accountName.map { AppBrand.current.accountPrefix + $0 } ?? receiver.receiverName,
                            subtitle: model.linkSummary, counter: nil, blocks: blocks)
+    }
+
+    /// Record & Play: start or end a recording, or play a saved one.
+    private func recorderBlocks() -> [RemoteBlock] {
+        let recorder = model.recorder
+        let canStart = model.controlPhase == .ready && !model.isBusy
+        switch recorder.state {
+        case .recording:
+            return [RemoteBlock("recorder", .status(RemoteStatus(
+                pill: NSLocalizedString("RECORDING", comment: "Remote pill"), tint: "danger",
+                title: String(format: NSLocalizedString("%d steps", comment: "Recorder"), recorder.draft?.steps.count ?? 0),
+                detail: NSLocalizedString("Taps, swipes and typing on the Live tab are recorded too.", comment: "Remote"),
+                symbol: "record.circle", since: recorder.draft?.startedAt,
+                actions: [action("recorder.save", NSLocalizedString("Save", comment: "Button"), symbol: "stop.fill",
+                                 style: .primary) { [recorder] in recorder.stopRecording() },
+                          action("recorder.discard", NSLocalizedString("Discard", comment: "Button"), symbol: "trash",
+                                 style: .destructive, tint: "danger",
+                                 confirm: NSLocalizedString("The steps recorded so far are not saved.", comment: "Recorder")) {
+                              [recorder] in recorder.stopRecording(save: false)
+                          }])))]
+        case .playing:
+            return [RemoteBlock("recorder", .status(RemoteStatus(
+                pill: NSLocalizedString("PLAYING", comment: "Remote pill"), tint: "accent",
+                title: recorder.playing?.name ?? "", detail: recorder.activityLine, symbol: "play.circle.fill",
+                actions: [stopAction("recorder.stop") { [recorder] in recorder.stopPlaying() }])))]
+        case .idle:
+            let options = PlaybackOptions.saved
+            let rows = RecordingLibrary.shared.recordings.prefix(20).map { recording -> RemoteRow in
+                let id = "recorder.play." + recording.id.uuidString
+                if canStart { actions[id] = { [recorder] in recorder.play(recording, options: options) } }
+                return RemoteRow(id: recording.id.uuidString, title: recording.name, detail: RecorderMenu.details(recording),
+                                 trailing: NSLocalizedString("Play", comment: "Button"), symbol: "play.circle.fill",
+                                 tint: "accent", action: canStart ? id : nil, enabled: canStart)
+            }
+            let times = options.repeats == 0 ? NSLocalizedString("until stopped", comment: "Recorder")
+                : options.repeats == 1 ? NSLocalizedString("once", comment: "Recorder")
+                : String(format: NSLocalizedString("%d times", comment: "Recorder"), options.repeats)
+            return [RemoteBlock("record", .actions([
+                        action("recorder.record", NSLocalizedString("Start recording", comment: "Button"),
+                               symbol: "record.circle", tint: "danger", enabled: canStart) { [recorder] in
+                            recorder.startRecording()
+                        }])),
+                    RemoteBlock("recordings", .rows(RemoteRows(
+                        title: NSLocalizedString("Recordings", comment: "Section"), rows: Array(rows),
+                        empty: NSLocalizedString("No recordings yet.", comment: "Recorder"),
+                        footer: String(format: NSLocalizedString("Plays %@ at %@ speed, as set in Record & Play on the Mac.", comment: "Recorder"),
+                                       times, options.speed == 0.5 ? "½×" : "\(Int(options.speed))×"))))]
+        }
     }
 
     /// "Open a window for another iPhone", while only one is open.

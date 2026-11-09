@@ -42,14 +42,14 @@ final class Tools: ObservableObject, WindowTools {
 
     func open(_ shortcut: Shortcut) {
         run(String(format: NSLocalizedString("Opening %@…", comment: "Demo"), shortcut.title), mode: "basics") { [model] in
-            try await model.openApp(shortcut.bundleIdentifier)
+            try await model.manual(.openApp(shortcut.bundleIdentifier))
             return String(format: NSLocalizedString("%@ is open", comment: "Demo"), shortcut.title)
         }
     }
 
     func goHome() {
         run(NSLocalizedString("Going to the Home Screen…", comment: "Demo"), mode: "basics") { [model] in
-            try await model.goHome()
+            try await model.manual(.home)
             return NSLocalizedString("Home Screen", comment: "Demo")
         }
     }
@@ -58,7 +58,7 @@ final class Tools: ObservableObject, WindowTools {
     func scroll(up: Bool) {
         run(NSLocalizedString("Swiping…", comment: "Demo"), mode: "basics") { [model] in
             let low = NormalizedPoint(x: 0.5, y: 0.72), high = NormalizedPoint(x: 0.5, y: 0.32)
-            try await model.drag(from: up ? low : high, to: up ? high : low, duration: 0.35)
+            try await model.manual(.drag(from: up ? low : high, to: up ? high : low, duration: 0.35))
             return NSLocalizedString("Swiped", comment: "Demo")
         }
     }
@@ -68,7 +68,7 @@ final class Tools: ObservableObject, WindowTools {
         let text = text.trimmingCharacters(in: .newlines)
         guard !text.isEmpty else { return }
         run(NSLocalizedString("Typing…", comment: "Demo"), mode: "basics") { [model] in
-            try await model.typeText(text)
+            try await model.manual(.type(text))
             return String(format: NSLocalizedString("Typed “%@”", comment: "Demo"), text)
         }
     }
@@ -91,7 +91,7 @@ final class Tools: ObservableObject, WindowTools {
             guard let match = found.first(where: { $0.normalized.contains(wanted) }) else {
                 return String(format: NSLocalizedString("“%@” is not on the screen", comment: "Demo"), text)
             }
-            try await model.tap(match.point)
+            try await model.manual(.tap(match.point))
             return String(format: NSLocalizedString("Tapped “%@”", comment: "Demo"), match.value)
         }
     }

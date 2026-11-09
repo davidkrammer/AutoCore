@@ -71,7 +71,7 @@ struct MirrorPane: View {
 
     private func typeOnPhone(_ text: String) -> Bool {
         guard canType else { return false }
-        keyboard.type(text) { [model] chunk in try await model.typeText(chunk) }
+        keyboard.type(text) { [model] chunk in try await model.manual(.type(chunk)) }
         return true
     }
 

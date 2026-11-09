@@ -35,9 +35,9 @@ struct ContentView: View {
                                              aspectRatio: aspect)
         HStack(spacing: 0) {
             MirrorPane(receiver: model.receiver,
-                       onTap: { point in sendManualGesture { try await model.tap(point, exact: true) } },
+                       onTap: { point in sendManualGesture { try await model.manual(.tap(point)) } },
                        onDrag: { start, end in
-                           sendManualGesture { try await model.drag(from: start, to: end, duration: 0.45, exact: true) }
+                           sendManualGesture { try await model.manual(.drag(from: start, to: end, duration: 0.45)) }
                        })
                 .frame(width: phoneSize.width, height: phoneSize.height)
                 .frame(width: maximumPhoneWidth, height: Self.phoneHeight)
@@ -48,6 +48,10 @@ struct ContentView: View {
                         model.tools.runBar(showPanel: { panelCollapsed = false })
                             .padding(.top, 6)
                     }
+                }
+                .overlay(alignment: .bottom) {
+                    RecorderBar(recorder: model.recorder)
+                        .padding(.bottom, 12)
                 }
             if !panelCollapsed {
                 Rectangle()
@@ -67,6 +71,9 @@ struct ContentView: View {
         .toolbarBackground(Palette.canvas, for: .windowToolbar)
         .toolbarBackground(.visible, for: .windowToolbar)
         .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                RecorderButton(model: model, recorder: model.recorder)
+            }
             ToolbarItem(placement: .primaryAction) {
                 AccountButton(model: model, receiver: model.receiver, connector: model.phoneConnector,
                               actions: menuActions, compact: panelCollapsed)

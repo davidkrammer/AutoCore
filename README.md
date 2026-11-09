@@ -40,6 +40,11 @@ recognition, windows and the Remote come from here.
   screen, with positions, so a tool can find a button by its label and tap
   it. It runs in a helper process that rebuilds itself if macOS deletes its
   model files.
+- **Record & Play.** Press record, then use the iPhone as usual: taps and
+  swipes on the mirror, Mac keyboard typing, the Remote and the app's
+  buttons are recorded with the pauses between them. Play a recording once,
+  several times or until you stop it, at ½×, 1× or 2× speed, from the Mac
+  or the Remote.
 - **More than one iPhone.** One window per iPhone; two run side by side.
   Hide the panel (⌃⌘S) to see only the iPhone.
 - **The Remote for iPhone.** The live picture, every tab and its settings,
@@ -48,6 +53,20 @@ recognition, windows and the Remote come from here.
   encrypted (X25519 key agreement, ChaCha20-Poly1305). The Mac describes
   every page, so new tools need no Remote update.
 - **English and German.**
+
+## Record & Play
+
+<div align="center">
+<img src="docs/images/mac-recorder.png" width="620" alt="Record & Play: start a recording, choose repeat and speed, and play saved recordings">
+</div>
+
+The record button in the title bar starts a recording (or ⌥⌘R). While it
+records, a bar over the mirror shows the steps so far, with **Save** and
+**Discard**. Saved recordings are in the same menu, with **Play**, and on the
+Remote's iPhone page. With **Human-like touches** on, each tap lands a few
+points off and a moment later, like a finger; off, it plays exactly as
+recorded. Recordings are JSON files in
+`~/Library/Application Support/AutoCore/recordings/`, easy to share or edit.
 
 ## The Remote
 
@@ -214,6 +233,8 @@ provides, each with a short explanation. Inside your tools, the window's
 | `try await model.goHome()` | Goes to the Home Screen |
 | `try await model.readScreen()` | The text on the screen, with positions, top to bottom |
 | `model.receiver.currentPixelBuffer()` | The latest mirrored frame |
+| `model.recorder.play(recording)` | Plays a recording (`RecordingLibrary.shared.recordings`) |
+| `try await model.manual(.tap(point))` | Does a step by hand: it is recorded while a recording runs |
 
 **4. Update AutoCore later**
 

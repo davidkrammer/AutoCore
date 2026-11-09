@@ -107,6 +107,11 @@ protocol WindowTools: AnyObject {
 extension AppModel {
     /// Shorthand for the panel: the tab a running tool keeps open.
     var lockedMode: String? { tools.lockedMode }
-    var activityLine: String? { tools.activityLine }
-    func stopActiveRun() { tools.stopActiveRun() }
+    /// What runs: a recording that plays or records, else the app's tool.
+    var activityLine: String? { recorder.activityLine ?? tools.activityLine }
+    /// Stops a playing recording and whatever of the app's runs.
+    func stopActiveRun() {
+        recorder.stopPlaying()
+        tools.stopActiveRun()
+    }
 }

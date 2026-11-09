@@ -20,7 +20,8 @@ xcodebuild -project AutoCore.xcodeproj -scheme AutoCore -destination 'platform=m
 ```
 
 `--ui-demo <scenario>` starts the app with sample data, without AirPlay or
-an iPhone (scenarios include `idle`, `running`, `read`, `menu`, `remote`).
+an iPhone (scenarios include `idle`, `running`, `read`, `menu`, `remote`, `recorder`,
+`recording`, `playing`).
 Add `--ui-demo-image <png>` to show a picture as the mirror.
 
 ## Style

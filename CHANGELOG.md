@@ -10,6 +10,9 @@ First public release.
   keyboard on the mirror; taps, swipes, typing, opening apps and going Home
   from code, with human-like variation.
 - Read the screen with Vision text recognition in a self-repairing helper.
+- Record & Play: record taps, swipes, typing and app buttons with their
+  pauses, and play them back (repeat, speed, human-like touches) from the
+  Mac or the Remote.
 - One window per iPhone; the panel can be hidden.
 - The Remote for iPhone: live picture, tabs and settings, taps and typing,
   paired with a 6-digit code and end-to-end encrypted.

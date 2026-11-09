@@ -379,15 +379,15 @@ final class RemoteServer: ObservableObject {
             session.framesInFlight = max(0, session.framesInFlight - 1)
         case let .tap(window, x, y):
             manual(window, session: session) { model in
-                try await model.tap(NormalizedPoint(x: x, y: y), exact: true)
+                try await model.manual(.tap(NormalizedPoint(x: x, y: y)))
             }
         case let .drag(window, fromX, fromY, toX, toY, duration):
             manual(window, session: session) { model in
-                try await model.drag(from: NormalizedPoint(x: fromX, y: fromY), to: NormalizedPoint(x: toX, y: toY),
-                                         duration: min(max(duration, 0.1), 2), exact: true)
+                try await model.manual(.drag(from: NormalizedPoint(x: fromX, y: fromY), to: NormalizedPoint(x: toX, y: toY),
+                                             duration: min(max(duration, 0.1), 2)))
             }
         case let .type(window, text):
-            manual(window, session: session) { model in try await model.typeText(String(text.prefix(200))) }
+            manual(window, session: session) { model in try await model.manual(.type(String(text.prefix(200)))) }
         case let .set(window, key, value):
             guard window == session.watchWindow, let setter = session.setters[key] else {
                 session.send(.result(ok: false, message: NSLocalizedString("This setting changed on the Mac. Try again.", comment: "Remote")))

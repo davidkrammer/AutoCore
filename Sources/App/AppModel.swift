@@ -71,6 +71,9 @@ final class AppModel: ObservableObject {
     let receiver = DirectAirPlayReceiver()
     /// The app's own tools for this window: its tabs and automations.
     private(set) var tools: Tools!
+    /// Record and play on this window's iPhone.
+    let recorder = Recorder()
+    private var recorderObserver: AnyCancellable?
 
     @Published var driver: ControlDriver {
         didSet {
@@ -183,6 +186,10 @@ final class AppModel: ObservableObject {
             : defaults.string(forKey: Self.wdaURLDefaultsKey) ?? "http://127.0.0.1:8100"
         useAirPlayWDAAddress = true
         tools = Tools(model: self)
+        recorder.performer = self
+        recorderObserver = recorder.$state.removeDuplicates().sink { [weak self] _ in
+            self?.objectWillChange.send()
+        }
 
         airPlayStateObserver = receiver.$state.removeDuplicates().sink { [weak self] state in
             Task { @MainActor [weak self] in
@@ -266,6 +273,7 @@ final class AppModel: ObservableObject {
             controlDetail = "Waiting for iPhone AirPlay…"
         }
         TextRecognitionRepair.shared.applyDemoScenario(scenario)
+        recorder.applyDemoScenario(scenario)
         tools.applyDemoScenario(scenario)
     }
 
@@ -574,6 +582,7 @@ final class AppModel: ObservableObject {
     }
 
     func closeWindow() {
+        recorder.windowWillClose()
         tools.windowWillClose()
         controlSupervisorTask?.cancel()
         cancelAirPlayDeviceIdentity()
@@ -658,8 +667,9 @@ final class AppModel: ObservableObject {
         preferredDeviceUDID = phone.hardwareUDID
     }
 
-    /// Something of the app's runs in this window.
-    var isBusy: Bool { tools.isBusy }
+    /// Something runs in this window: one of the app's tools, or a recording
+    /// that plays.
+    var isBusy: Bool { tools.isBusy || recorder.isPlaying }
 
 
     /// The picture stopped, or the same or another iPhone took over this

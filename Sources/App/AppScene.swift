@@ -33,6 +33,7 @@ final class WindowRegistry: ObservableObject {
             model.$accountConfirmed.removeDuplicates().sink { _ in changed() },
             model.$preferredDeviceUDID.removeDuplicates().sink { _ in changed() },
             model.tools.changes.sink { _ in changed() },
+            model.recorder.$state.removeDuplicates().sink { _ in changed() },
         ]
         revision &+= 1
     }
@@ -122,6 +123,8 @@ private struct AppCommands: Commands {
     var body: some Commands {
         CommandMenu("Automation") {
             Tools.commands(for: model)
+            Divider()
+            RecorderCommands(model: model)
         }
     }
 }
