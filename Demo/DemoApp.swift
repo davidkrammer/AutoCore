@@ -11,5 +11,6 @@ extension AppBrand {
     static let current = AppBrand(
         name: "AutoCore",
         // nil: touch control works in whatever app is on screen.
-        targetBundleIdentifier: nil)
+        targetBundleIdentifier: nil,
+        supportURL: URL(string: "https://github.com/sponsors/davidkrammer"))
 }

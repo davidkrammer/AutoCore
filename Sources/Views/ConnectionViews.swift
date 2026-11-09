@@ -245,6 +245,10 @@ struct AccountMenu: View {
                     .foregroundStyle(.secondary)
             }
             if showPairingHelp { pairingHelp }
+            if let support = AppBrand.current.supportURL {
+                item("Support \(AppBrand.current.name)…", "heart", then: { NSWorkspace.shared.open(support) })
+                    .help(NSLocalizedString("Free and open source; a donation keeps it going.", comment: "Support menu help"))
+            }
             item("Rebuild text recognition", "text.viewfinder", then: actions.rebuildRecognition)
                 .help(NSLocalizedString("Use this when macOS deleted the text recognition files. Takes one to two minutes.",
                                         comment: "Rebuild menu help"))

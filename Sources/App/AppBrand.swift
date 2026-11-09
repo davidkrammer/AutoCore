@@ -24,6 +24,9 @@ struct AppBrand {
     var legacyKeys: [String: String] = [:]
     /// Runs once at launch with the data folder, e.g. to copy older files in.
     var prepareDataFolder: ((URL) -> Void)?
+    /// Where people can support the app (e.g. GitHub Sponsors); shown in the
+    /// title-bar menu when set.
+    var supportURL: URL?
 
     /// "<name>.<key>", or the key's older name.
     static func key(_ name: String) -> String {

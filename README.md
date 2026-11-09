@@ -11,6 +11,7 @@ and build your own iPhone automation app on top.**
 [![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
 ![macOS 14+](https://img.shields.io/badge/macOS-14%2B-black.svg)
 ![Swift](https://img.shields.io/badge/Swift-SwiftUI-orange.svg)
+[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-db61a2.svg)](https://github.com/sponsors/davidkrammer)
 
 <img src="docs/images/mac-read.png" width="760" alt="AutoCore on a Mac: the mirrored iPhone on the left, the Read tab on the right finding “Keyboard” on the screen">
 
@@ -276,6 +277,13 @@ git commit -am "Update AutoCore"
 - **The Remote doesn't find the Mac.** Both must be on the same Wi‑Fi, the
   Remote must be allowed on the Mac, and the iPhone must allow the Remote
   local network access (Settings › Privacy & Security › Local Network).
+
+## Support AutoCore
+
+AutoCore is free and open source. If it saves you time, you can support its
+development with a donation through
+[GitHub Sponsors](https://github.com/sponsors/davidkrammer), one-time or
+monthly. Thank you!
 
 ## Contributing
 
