@@ -1,0 +1,22 @@
+# Xcode
+*.xcodeproj/
+DerivedData/
+build/
+xcuserdata/
+*.xcuserstate
+
+# Your team and bundle prefix
+Config/Local.xcconfig
+
+# Built by scripts/build-wda.sh, signed with your team
+Resources/WebDriverAgentProducts.zip
+Resources/WebDriverAgentSource.zip
+
+# Secrets
+.env*
+*.p8
+*.pem
+*.mobileprovision
+
+.DS_Store
+__pycache__/

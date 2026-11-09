@@ -1,0 +1,7 @@
+// Settings every build uses. Your own team and bundle ID prefix go into
+// Local.xcconfig next to this file (copy Local.xcconfig.example); it is not
+// committed.
+DEVELOPMENT_TEAM =
+AUTOCORE_BUNDLE_PREFIX = com.example
+
+#include? "Local.xcconfig"

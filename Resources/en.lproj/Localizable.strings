@@ -1,0 +1,21 @@
+/* AutoCore */
+
+"Choose iPhone" = "Choose iPhone";
+"Connect an iPhone" = "Connect an iPhone";
+"Could not identify the mirrored iPhone in Xcode. Pair it or choose it manually." = "Could not identify the mirrored iPhone in Xcode. Pair it or choose it manually.";
+"Could not open Device Hub. Open Xcode → Xcode → Open Developer Tool → Device Hub." = "Could not open Device Hub. Open Xcode → Xcode → Open Developer Tool → Device Hub.";
+"Identifying the mirrored iPhone…" = "Identifying the mirrored iPhone…";
+"Matched from AirPlay" = "Matched from AirPlay";
+"More than one paired iPhone is available. Choose it from the touch status in the toolbar." = "More than one paired iPhone is available. Choose it from the touch status in the toolbar.";
+"No paired iPhone is available in Xcode." = "No paired iPhone is available in Xcode.";
+"Older iOS: connect the iPhone to this Mac with a cable." = "Older iOS: connect the iPhone to this Mac with a cable.";
+"Open Xcode Device Hub" = "Open Xcode Device Hub";
+"Pair it once in Xcode Device Hub, then choose it in this window." = "Pair it once in Xcode Device Hub, then choose it in this window.";
+"Pair the mirrored iPhone in Xcode or choose it manually." = "Pair the mirrored iPhone in Xcode or choose it manually.";
+"Refresh iPhones" = "Refresh iPhones";
+"Refresh paired iPhones" = "Refresh paired iPhones";
+"Retry touch control" = "Retry touch control";
+"Selected manually" = "Selected manually";
+"Unlock the iPhone, tap Trust, and enable Developer Mode if asked." = "Unlock the iPhone, tap Trust, and enable Developer Mode if asked.";
+"iOS 27 or newer: use Pair Nearby Device on the same Wi-Fi." = "iOS 27 or newer: use Pair Nearby Device on the same Wi-Fi.";
+"iPhone" = "iPhone";

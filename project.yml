@@ -1,0 +1,128 @@
+name: AutoCore
+
+options:
+  createIntermediateGroups: true
+  developmentLanguage: en
+  deploymentTarget:
+    macOS: "14.0"
+
+# Your Apple team and bundle ID prefix: copy Config/Local.xcconfig.example to
+# Config/Local.xcconfig (not committed) and fill it in.
+configFiles:
+  Debug: Config/AutoCore.xcconfig
+  Release: Config/AutoCore.xcconfig
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CLANG_ENABLE_MODULES: YES
+    CLANG_CXX_LANGUAGE_STANDARD: "gnu++20"
+    GCC_C_LANGUAGE_STANDARD: "gnu17"
+    CODE_SIGN_STYLE: Automatic
+
+targets:
+  # The demo app: AutoCore with a few tools to try.
+  AutoCore:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources
+      - path: Shared
+      - path: VisionService/VisionServiceProtocol.swift
+      - path: Demo
+        excludes:
+          - "**/Localizable.strings"
+      - path: Resources/WebDriverAgent-LICENSE.txt
+        buildPhase: resources
+      # Built by scripts/build-wda.sh (not committed).
+      - path: Resources/WebDriverAgentProducts.zip
+        buildPhase: resources
+        optional: true
+      - path: Resources/WebDriverAgentSource.zip
+        buildPhase: resources
+        optional: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(AUTOCORE_BUNDLE_PREFIX).autocore
+        PRODUCT_NAME: AutoCore
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Demo/Info.plist
+        SWIFT_OBJC_BRIDGING_HEADER: Sources/AirPlay/AutoCore-Bridging-Header.h
+        ENABLE_APP_SANDBOX: NO
+        ENABLE_HARDENED_RUNTIME: YES
+    dependencies:
+      - target: AutoCoreVision
+    postBuildScripts:
+      - name: Merge strings
+        script: '"$SRCROOT/scripts/merge-strings.sh" "$SRCROOT/Resources" "$SRCROOT/Demo"'
+        basedOnDependencyAnalysis: false
+
+  # Text recognition helper. macOS can delete Vision's compiled model while
+  # the app runs; restarting this process rebuilds it without dropping AirPlay.
+  AutoCoreVision:
+    type: xpc-service
+    platform: macOS
+    sources:
+      - path: VisionService
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(AUTOCORE_BUNDLE_PREFIX).autocore.vision
+        PRODUCT_NAME: AutoCoreVision
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: VisionService/Info.plist
+        ENABLE_APP_SANDBOX: NO
+        ENABLE_HARDENED_RUNTIME: YES
+        SKIP_INSTALL: YES
+
+  AutoCoreTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests
+    dependencies:
+      - target: AutoCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(AUTOCORE_BUNDLE_PREFIX).autocore.tests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/AutoCore.app/Contents/MacOS/AutoCore"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        GENERATE_INFOPLIST_FILE: YES
+
+  # AutoCore Remote: the iPhone app that shows and controls the Mac app.
+  AutoCoreRemote:
+    type: application
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: Remote
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_NAME: AutoCore Remote
+        PRODUCT_BUNDLE_IDENTIFIER: $(AUTOCORE_BUNDLE_PREFIX).autocore.remote
+        PRODUCT_MODULE_NAME: AutoCoreRemote
+        IPHONEOS_DEPLOYMENT_TARGET: "26.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Remote/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+
+schemes:
+  AutoCore:
+    build:
+      targets:
+        AutoCore: all
+    test:
+      targets:
+        - AutoCoreTests
+  AutoCoreRemote:
+    build:
+      targets:
+        AutoCoreRemote: all
